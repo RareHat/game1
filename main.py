@@ -77,12 +77,24 @@ def game():
             self.hitbox.x += self.speed
     class Enemy:
         def __init__(self, speed, width, height, x, y, skin, hp, damage):
-
+            self.texture = pygame.image.load(skin)
+            self.texture = pygame.transform.scale(self.texture, [width, height])
+            self.hitbox = self.texture.get_rect()
+            self.hitbox.x = x
+            self.hitbox.y = y
+            self.speed = speed
+            self.bullets = []
+            self.hp = hp
+            self.damage = damage
+        def draw(self, window):
+            #pygame.draw.rect(window,[1,1,1],self.hitbox)
+            window.blit(self.texture, self.hitbox)
 
 
     fps = pygame.time.Clock()
 
-    player = Player(10, 50, 100, 650, 450, "img_2-removebg-preview.png","img_3.png", 100,70, 670,460)
+    player = Player(10, 50, 100, 650, 450, "img_2-removebg-preview.png","img_3.png", 100,70, 670,460,100,300)
+    Enemy_1 = Enemy(1,300,300,400,150,'sticker-png-terraria-minecraft-boss-item-player-character-minecraft-boss-android-wiki-voodoo-doll-video-games-removebg-preview.png', 10,134)
     background = pygame.image.load('img.png')
     background = pygame.transform.scale(background, window.get_size())
 
@@ -100,6 +112,30 @@ def game():
                 if event.key == pygame.K_ESCAPE:
                     pygame.quit()
                     return
+
+        for bullet in player.bullets:
+                if bullet.hitbox.colliderect(Enemy_1.hitbox):
+                    Enemy_1.hp = -10
+                    player.bullets.remove(bullet)
+
+
+                    break
+        if Enemy_1.hp  <= 0:
+            Enemy_1.hitbox.x = 5000
+        Enemy_1.hitbox.x += random.randint(-50, 50)
+        Enemy_1.hitbox.y += random.randint(-50, 50)
+        if Enemy_1.hitbox.y > window.get_height()-Enemy_1.hitbox.height:
+            Enemy_1.hitbox.y -= Enemy_1.speed
+
+        if Enemy_1.hitbox.y <0:
+            Enemy_1.hitbox.y += Enemy_1.speed
+
+
+        if Enemy_1.hitbox.x > window.get_width()-Enemy_1.hitbox.width:
+            Enemy_1.hitbox.x -= Enemy_1.speed
+
+        if Enemy_1.hitbox.x <0:
+            Enemy_1.hitbox.x += Enemy_1.speed
 
 
         player.move()
@@ -122,7 +158,7 @@ def game():
         window.fill([255, 255, 255])
         window.blit(background, [0, 0])
         player.draw(window)
-
+        Enemy_1.draw(window)
         pygame.display.flip()
-        fps.tick(144)
+        fps.tick(1000)
 game()
