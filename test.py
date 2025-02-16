@@ -11,7 +11,7 @@ def game():
     window = pygame.display.set_mode((0,0))
 
     class Player:
-        def __init__(self,speed, width , height, x, y, skin, gun_skin, width_gun, height_gun, x_gun, y_gun, damage, hp):
+        def __init__(self, speed, width, height, x, y, skin, gun_skin, width_gun, height_gun, x_gun, y_gun, damage, hp):
             self.texture = pygame.image.load(skin)
             self.texture_gun = pygame.image.load(gun_skin)
             self.texture_gun = pygame.transform.scale(self.texture_gun, [width_gun, height_gun])
@@ -27,31 +27,48 @@ def game():
             self.last_shoot = 0
             self.hp = hp
             self.damage = damage
+            self.direction = "right"  # To track movement direction
 
         def move(self):
             keys = pygame.key.get_pressed()
-            if keys [pygame.K_d]:
+
+            # Moving right
+            if keys[pygame.K_d]:
                 self.hitbox.x += self.speed
                 self.hitbox_gun.x += self.speed
-            if keys [pygame.K_s]:
+                self.direction = "right"
+
+            # Moving down
+            if keys[pygame.K_s]:
                 self.hitbox.y += self.speed
                 self.hitbox_gun.y += self.speed
-            if keys [pygame.K_w]:
+
+            # Moving up
+            if keys[pygame.K_w]:
                 self.hitbox.y -= self.speed
                 self.hitbox_gun.y -= self.speed
-            if keys [pygame.K_a]:
+
+            # Moving left
+            if keys[pygame.K_a]:
                 self.hitbox.x -= self.speed
                 self.hitbox_gun.x -= self.speed
+                self.direction = "left"
+
+            # Shooting
             if keys[pygame.K_x]:
-                if time.time()-self.last_shoot > 0.2:
-                    self.bullets.append(Bullet(15,
-                                               30, 10,
-                                               self.hitbox.x+20, self.hitbox.y+50,
-                                               "Screenshot 2025-01-26 131843.png"))
-                    self.last_shoot= time.time()
+                if time.time() - self.last_shoot > 0.2:
+                    self.bullets.append(
+                        Bullet(15, 30, 10, self.hitbox.x + 20, self.hitbox.y + 50, "Screenshot 2025-01-26 131843.png"))
+                    self.last_shoot = time.time()
 
             for bullet in self.bullets:
                 bullet.move()
+
+            # Flip texture based on direction
+            if self.direction == "left":
+                self.texture = pygame.transform.flip(self.texture, True, False)
+            elif self.direction == "right":
+                self.texture = pygame.transform.flip(self.texture, False, False)
 
         def draw(self, window):
             window.blit(self.texture, self.hitbox)
@@ -176,3 +193,4 @@ def game():
         Enemy_1.draw(window)
         pygame.display.flip()
         fps.tick(60)
+game()
