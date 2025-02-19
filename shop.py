@@ -3,22 +3,22 @@ from PyQt5.QtWidgets import *
 from file_helper_14 import *
 
 def shop_window():
-    window = QDialog()
-    catalog = [
+        window = QDialog()
+        catalog = [
         {
-                "name": "skin 1",
-                "kartinka": "ufo.png",
+                "name": "Tier 1",
+                "kartinka": "img_3.png",
                 "price": 200
             },
             {
-                "name": "skin 2",
-                "kartinka": "rocket.png",
-                "price": 250
+                "name": "Tier 2",
+                "kartinka": "images-removebg-preview.png",
+                "price": 1000
             },
             {
-                "name": "skin 2",
-                "kartinka": "rocket.png",
-                "price": 250
+                "name": "Tier 3",
+                "kartinka": "94-947156_terraria-png-terraria-gun-transparent-png-removebg-preview.png",
+                "price": 2000
             },
         ]
         data = read_from_file()
@@ -34,7 +34,7 @@ def shop_window():
             if data["score"] >= p:
                 data["score"] -= p
                 data["skin"] = skin
-            #write_in_file(data)
+            write_in_file(data)
 
         for element in catalog:
             v1 = QVBoxLayout()
@@ -78,4 +78,4 @@ def shop_window():
 
 
 
-    window.exec()
+        window.exec()

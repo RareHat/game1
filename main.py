@@ -1,5 +1,7 @@
 import time
 
+from file_helper_14 import read_from_file, write_in_file
+
 
 def game():
     import pygame
@@ -43,8 +45,9 @@ def game():
                 self.hitbox.x -= self.speed
                 self.hitbox_gun.x -= self.speed
             if keys[pygame.K_x]:
-                if time.time()-self.last_shoot > 0.2:
-                    self.bullets.append(Bullet(15,
+                data = read_from_file()
+                if time.time()-self.last_shoot > data["gun_attack_speed"]:
+                    self.bullets.append(Bullet("bullet_speed"(data),
                                                30, 10,
                                                self.hitbox.x+20, self.hitbox.y+50,
                                                "Screenshot 2025-01-26 131843.png"))
@@ -97,9 +100,11 @@ def game():
 
 
     fps = pygame.time.Clock()
-
-    player = Player(10, 50, 100, 650, 450, "img_2-removebg-preview.png","img_3.png", 100,70, 670,460,100,300)
-    Enemy_1 = Enemy(10,300,300,-5,-5,'sticker-png-terraria-minecraft-boss-item-player-character-minecraft-boss-android-wiki-voodoo-doll-video-games-removebg-preview.png', 3600,134)
+    data = read_from_file()
+    player = Player(10, 50, 100, 650, 450, "img_2-removebg-preview.png",data["skin"], 100,70, 670,460,50,300)
+    Enemy_1 = Enemy(10,300,300,-5,-5,'sticker-png-terraria-minecraft-boss-item-player-character-minecraft-boss-android-wiki-voodoo-doll-video-games-removebg-preview.png', 1200,134)
+    Enemy_2 = Enemy(20, 500, 500,-5,-5, "png-clipart-pixel-art-sprite-arcade-game-character-sprite-purple-violet-removebg-preview.png", 2500, 140)
+    Enemy_2 = Enemy( 40, 700, 700, -5, -5, "png-clipart-dungeon-crawl-pixel-dungeon-boss-pixel-art-pixel-miscellaneous-game-removebg-preview.png", 5000, 1000)
     background = pygame.image.load('img.png')
     background = pygame.transform.scale(background, window.get_size())
     start_time = time.time()
@@ -120,19 +125,25 @@ def game():
 
         for bullet in player.bullets:
                 if bullet.hitbox.colliderect(Enemy_1.hitbox):
-                    Enemy_1.hp = -10
+                    Enemy_1.hp -= 10
                     player.bullets.remove(bullet)
 
         if Enemy_1.hitbox.colliderect(player.hitbox):
             player.hp -= 4000
         if player.hp <= 0:
             print(player.hp)
+            pygame.quit()
             return
 
 
             break
-        if Enemy_1.hp  <= 0:
+        if Enemy_1.hp  <= 0 and Enemy_1.hitbox.x <= 2000:
             Enemy_1.hitbox.x = 5000
+            data = read_from_file()
+            data["score"] += 200
+            write_in_file(data)
+            Enemy_1 = Enemy_2
+
         if time.time() -start_time >= 2:
             Enemy_1.speed = random.randint(-10, 10)
             Enemy_1.speed_y = random.randint(-10, 10)
