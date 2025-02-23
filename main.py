@@ -47,10 +47,27 @@ def game():
             if keys[pygame.K_x]:
                 data = read_from_file()
                 if time.time()-self.last_shoot > data["gun_attack_speed"]:
-                    self.bullets.append(Bullet("bullet_speed"(data),
+                    self.bullets.append(Bullet(data["bullet_speed"],0,
                                                30, 10,
                                                self.hitbox.x+20, self.hitbox.y+50,
                                                "Screenshot 2025-01-26 131843.png"))
+            if keys[pygame.K_z]:
+                data = read_from_file()
+                if time.time() - self.last_shoot > data["gun_attack_speed"]:
+                    self.bullets.append(Bullet(0, data["bullet_speed"],
+                                            30, 10,
+                                            self.hitbox.x + 20, self.hitbox.y + 50,
+                                            "Screenshot 2025-01-26 131843.png"))
+                    self.last_shoot = time.time()
+
+            if keys[pygame.K_c]:
+                data = read_from_file()
+                if time.time() - self.last_shoot > data["gun_attack_speed"]:
+                    self.bullets.append(Bullet(0, -data["bullet_speed"],
+                                               30, 10,
+                                               self.hitbox.x + 20, self.hitbox.y + 50,
+                                               "Screenshot 2025-01-26 131843.png"))
+
                     self.last_shoot= time.time()
 
             for bullet in self.bullets:
@@ -64,13 +81,14 @@ def game():
 
     class Bullet:
 
-        def __init__(self,speed, width, height, x, y, skin):
+        def __init__(self,speed_x, speed_y, width, height, x, y, skin):
             self.texture = pygame.image.load(skin)
             self.texture = pygame.transform.scale(self.texture, [width, height])
             self.hitbox = self.texture.get_rect()
             self.hitbox.x = x
             self.hitbox.y = y
-            self.speed = speed
+            self.speed_x = speed_x
+            self.speed_y = speed_y
             self.bullets = []
 
 
@@ -79,7 +97,8 @@ def game():
 
 
         def move(self):
-            self.hitbox.x += self.speed
+            self.hitbox.x += self.speed_x
+            self.hitbox.y += self.speed_y
     class Enemy:
         def __init__(self, speed, width, height, x, y, skin, hp, damage):
             self.texture = pygame.image.load(skin)
@@ -103,8 +122,8 @@ def game():
     data = read_from_file()
     player = Player(10, 50, 100, 650, 450, "img_2-removebg-preview.png",data["skin"], 100,70, 670,460,50,300)
     Enemy_1 = Enemy(10,300,300,-5,-5,'sticker-png-terraria-minecraft-boss-item-player-character-minecraft-boss-android-wiki-voodoo-doll-video-games-removebg-preview.png', 1200,134)
-    Enemy_2 = Enemy(20, 500, 500,-5,-5, "png-clipart-pixel-art-sprite-arcade-game-character-sprite-purple-violet-removebg-preview.png", 2500, 140)
-    Enemy_2 = Enemy( 40, 700, 700, -5, -5, "png-clipart-dungeon-crawl-pixel-dungeon-boss-pixel-art-pixel-miscellaneous-game-removebg-preview.png", 5000, 1000)
+    Enemy_3 = Enemy(20, 250, 250,-5,-5, "png-clipart-pixel-art-sprite-arcade-game-character-sprite-purple-violet-removebg-preview.png", 800, 140)
+    Enemy_2 = Enemy( 40, 350, 350, -5, -5, "png-clipart-dungeon-crawl-pixel-dungeon-boss-pixel-art-pixel-miscellaneous-game-removebg-preview.png", 800, 1000)
     background = pygame.image.load('img.png')
     background = pygame.transform.scale(background, window.get_size())
     start_time = time.time()
