@@ -51,6 +51,7 @@ def game():
                                                30, 10,
                                                self.hitbox.x+20, self.hitbox.y+50,
                                                "Screenshot 2025-01-26 131843.png"))
+                    self.last_shoot = time.time()
             if keys[pygame.K_z]:
                 data = read_from_file()
                 if time.time() - self.last_shoot > data["gun_attack_speed"]:
